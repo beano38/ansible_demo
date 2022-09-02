@@ -1,0 +1,10 @@
+# create virtual environment python3 -m venv .env
+# launch virtual environment source .env/bin/activate
+# python -m pip install -r requirements.txt
+wheel
+ansible
+yamllint
+ansible-pylibssh # needed for ansible.netcommon
+ncclient
+xmltodict
+lxml

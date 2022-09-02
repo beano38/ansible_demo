@@ -1,0 +1,29 @@
+#cloud-config
+hostname: pc1
+manage_etc_hosts: True
+system_info:
+  default_user:
+    name: beelder
+password: cisco
+chpasswd: { expire: False }
+ssh_pwauth: True
+ssh_authorized_keys:
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDbVOG2zvcfoZuOXwpfow95DxlFUG9Cys3JfzLjJ8A1bzm2224gx5KxvNrDGJS1cnceYgyXDmCJiM/kR93wHSSKxNSH5Xo1REv54HmHvgPC+LiUVP3wamqI9wlZI6fuzKEGbAHtjz3OMxCVUB30blBMZjfxvXNlvgyi3bWwHq3bFvlPcakOfKa9O3Y4LhIlihYot94aWysvT66DCNg8qS+kmHQ9/3rPUHaq+RisuABESvDaLVistOWPHGXQ1Tu9ckPQ6GnH3hoA8sFNAu88Fd8DfhGoZf+bqhj4BNNK2WEpz9Dl9vp4sgkxQOApJG829bmBJxP1u2KASgo7zzNDAUAyTXcMBt+9UzMyLuDUZDDlzpK9JxIovm/zXJqsUGYkUiW5nwI3K9mNsX/o5cZkO7LqV4y0K2rmyJt14NfbjCNQujTpfFTbApHZ7zVMJOWWwx6yMYAdngig6mbGIwUaj9rorxFQMh+dvMQgk/Z7/I4Ha32aC5QZdtUy8Iv/753Z//8= beelder@BEELDER-M-3AN1
+write_files:
+  - path: /etc/netplan/00-install-config.yaml
+    content: |
+      network:
+        version: 2
+        renderer: networkd
+        ethernets:
+          ens3:
+            addresses:
+              - 172.16.100.221/24
+            gateway4: 172.16.100.1
+            nameservers:
+              addresses: 
+                - 172.16.30.10
+    owner: root:root
+    permissions: 0644
+runcmd:
+  - netplan apply

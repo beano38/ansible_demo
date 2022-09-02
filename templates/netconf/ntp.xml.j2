@@ -1,0 +1,23 @@
+<ntp>
+  <server xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-ntp" operation="replace">
+    <vrf>
+    {% for server in ntp.servers  %}
+    {% if server.vrf_name is defined %}
+      <name>{{ server.vrf_name }}</name>
+      <server-list>
+        <ip-address>{{ server.ipv4 }}</ip-address>
+        {% if server.prefer is defined and server.prefer == true %}<prefer/>{% endif %}
+      </server-list>
+    {% endif %}
+    {% endfor %}
+    </vrf>
+    {% for server in ntp.servers %}
+    {% if server.vrf_name is not defined %}
+    <server-list>
+      <ip-address>{{ server.ipv4 }}</ip-address>
+      {% if server.prefer is defined and server.prefer == true %}<prefer/>{% endif %}
+    </server-list>
+    {% endif %}
+    {% endfor %}
+  </server>
+</ntp>

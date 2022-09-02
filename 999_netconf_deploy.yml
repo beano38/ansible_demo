@@ -1,0 +1,44 @@
+---
+- name: Deploy Router via Netconf
+  hosts: routers
+  gather_facts: no
+
+  vars:
+    ansible_connection: ansible.netcommon.netconf
+
+  tasks:
+
+    - name: Render Netconf Configuration
+      template:
+        src: "templates/router_baseline_netconf.xml.j2"
+        dest: "temp/{{ hostname }}_netconf.xml"
+      delegate_to: localhost
+      tags: [ never, render ]
+
+    - name: Set formatting for saved test XML file
+      community.general.xml:
+        path: "temp/{{ hostname }}_netconf.xml"
+        pretty_print: yes
+      tags: [ never, render ]
+
+    - name: Get running configuration and state data
+      ansible.netcommon.netconf_get:
+        source: running
+      register: running_config
+
+    - name: Save Running Config to temp file
+      copy:
+        content: "{{ running_config.stdout }}"
+        dest: "temp/{{ hostname }}_netconfig.xml"
+
+    - name: Set formatting for saved config XML file
+      community.general.xml:
+        path: "temp/{{ hostname }}_netconfig.xml"
+        pretty_print: yes
+
+    - name: Config IOSXE NTP
+      ansible.netcommon.netconf_config:
+        content: "{{ lookup('template', 'templates/router_baseline_netconf.xml.j2') }}"
+        format: xml
+        target: candidate
+        commit: yes

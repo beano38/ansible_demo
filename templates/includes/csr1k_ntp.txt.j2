@@ -1,0 +1,12 @@
+clock timezone EST -5 0
+clock summer-time EST recurring
+!
+{% for server in ntp.servers %}
+{% if server.vrf_name is defined %}
+ntp server vrf {{ server.vrf_name }} {{ server.ipv4 }} {% if server.prefer is defined and server.prefer == true %}prefer{% endif %}
+
+{% elif server.vrf_name is not defined %}
+ntp server {{ server.ipv4 }} {% if server.prefer is defined and server.prefer == true %}prefer{% endif %}
+
+{% endif %}
+{% endfor %}

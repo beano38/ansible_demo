@@ -1,0 +1,17 @@
+---
+hostname: sw2
+ansible_host: 172.16.100.122
+id: 122
+
+mgmt_intf: GigabitEthernet0/0
+
+interfaces:
+  - type: GigabitEthernet
+    number: 0/1
+    description: RTR2-GE2
+  - type: GigabitEthernet
+    number: 0/2
+    description: RTR2-GE3
+  - type: GigabitEthernet
+    number: 3/0
+    description: PC2-ENS3

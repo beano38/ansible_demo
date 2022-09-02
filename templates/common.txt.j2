@@ -1,0 +1,5 @@
+hostname {{ hostname }}
+!
+{% if snmp is defined %}
+{% include 'includes/snmp.txt.j2' %}
+{% endif %}

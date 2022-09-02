@@ -1,0 +1,66 @@
+---
+- name: Deploy Router Configurations
+  hosts: routers
+  gather_facts: no
+
+  tasks:
+    - name: Render Configuration
+      ansible.builtin.template:
+        src: templates/router_baseline.txt.j2
+        dest: "temp/{{ hostname }}_config.txt"
+      delegate_to: localhost
+      tags: [ never, render ]
+
+    - name: Backup Running Config
+      cisco.ios.ios_config:
+        backup: yes
+        backup_options:
+          filename: "{{ hostname }}_backup.txt"
+          dir_path: ./temp
+
+    - name: Deploy Config
+      cisco.ios.ios_config:
+        src: templates/router_baseline.txt.j2
+        save_when: modified
+        diff_against: intended
+        intended_config: "{{ lookup('ansible.builtin.file', './temp/{{ hostname }}_backup.txt') }}"
+      register: router_config
+    
+    - name: Pushed Config Lines
+      debug:
+        msg: "{{ router_config.updates }}"
+      when: router_config.updates is defined
+
+#################################################################
+
+- name: Deploy Switch Configurations
+  hosts: switches
+  gather_facts: no
+
+  tasks:
+    - name: Render Configuration
+      ansible.builtin.template:
+        src: templates/switch_baseline.txt.j2
+        dest: "temp/{{ hostname }}_config.txt"
+      delegate_to: localhost
+      tags: [ never, render ]
+    
+    - name: Backup Running Config
+      cisco.ios.ios_config:
+        backup: yes
+        backup_options:
+          filename: "{{ hostname }}_backup.txt"
+          dir_path: ./temp
+
+    - name: Deploy Config
+      cisco.ios.ios_config:
+        src: templates/switch_baseline.txt.j2
+        save_when: modified
+        diff_against: intended
+        intended_config: "{{ lookup('ansible.builtin.file', './temp/{{ hostname }}_backup.txt') }}"
+      register: switch_config
+    
+    - name: Pushed Config Lines
+      debug:
+        msg: "{{ switch_config.updates }}"
+      when: switch_config.updates is defined

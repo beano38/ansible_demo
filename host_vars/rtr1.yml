@@ -1,0 +1,21 @@
+---
+hostname: rtr1
+ansible_host: 172.16.100.111
+id: 111
+
+interfaces:
+  - type: GigabitEthernet
+    number: 2
+    description: SW1-GE0/1
+  - type: GigabitEthernet
+    number: 3
+    description: SW1-GE0/2
+  - type: GigabitEthernet
+    number: 4
+    description: SW2-GE0/1
+  - type: GigabitEthernet
+    number: 5
+    description: SW2-GE0/2
+  - type: GigabitEthernet
+    number: 21
+    description: PC3-ENS3

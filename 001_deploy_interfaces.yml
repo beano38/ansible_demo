@@ -1,0 +1,24 @@
+---
+- name: Deploy Interface Configurations
+  hosts: switches
+  gather_facts: no
+
+  tasks:
+    - name: Create VLANs
+      cisco.ios.ios_vlans:
+        config:
+          - vlan_id: "{{ item.id }}"
+            name: "{{ item.description }}"
+            state: active
+            shutdown: disabled
+        state: replaced
+      loop: "{{ vlans }}"
+
+    - name: Create Interfaces
+      cisco.ios.ios_interfaces:
+        config:
+          - name: "{{ item.type }}{{ item.number }}"
+            description: "{{ item.description }}"
+            enabled: yes
+        state: replaced
+      loop: "{{ interfaces }}"

@@ -1,0 +1,17 @@
+---
+snmp:
+  contact: Netops All
+  location: 123 Main St, USA
+  communities:
+    - community: public
+      rights: ro
+    - community: private
+      rights: rw
+
+ntp:
+  servers:
+    - ipv4: 172.16.30.10
+      vrf_name: Mgmt-intf
+      prefer: yes
+    - ipv4: 172.16.100.11
+      vrf_name: Mgmt-intf
