@@ -14,4 +14,4 @@ ntp:
       vrf_name: Mgmt-intf
       prefer: yes
     - ipv4: 172.16.100.11
-      vrf_name: Mgmt-intf
+      vrf_name: tod
